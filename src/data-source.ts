@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
 	type: "mssql",
 	host: "localhost",
 	username: "sa",
-	password: "@Flashback054",
+	password: "<YourPassword>",
 	database: "QLPHONGKHAMNHAKHOA",
 	synchronize: false,
 	logging: false,
