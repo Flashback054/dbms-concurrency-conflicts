@@ -1,0 +1,11 @@
+export * from "./KhachHang";
+export * from "./NhanVien";
+export * from "./LichHen";
+export * from "./NhaSi";
+export * from "./ChiTietLichHen";
+// export * from "./HoSoBenhAn";
+// export * from "./HoSoLanKham";
+// export * from "./HoSoKham_DichVu";
+// export * from "./HoSoKham_Thuoc";
+export * from "./DichVu";
+export * from "./Thuoc";
