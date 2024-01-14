@@ -37,4 +37,14 @@ router.post(
 	StoreProcController.LostUpdate_sp_UpdateSoluongtonThuoc_Before
 );
 
+router.post("/dirty-read/fix", StoreProcController.DirtyRead_Fix);
+router.post("/conversion/fix", StoreProcController.Conversion_Fix);
+router.post("/phantom-read/fix", StoreProcController.PhantomRead_Fix);
+router.post("/lost-update/fix", StoreProcController.LostUpdate_Fix);
+
+router.post("/dirty-read/no-fix", StoreProcController.DirtyRead_NoFix);
+router.post("/conversion/no-fix", StoreProcController.Conversion_NoFix);
+router.post("/phantom-read/no-fix", StoreProcController.PhantomRead_NoFix);
+router.post("/lost-update/no-fix", StoreProcController.LostUpdate_NoFix);
+
 export default router;
