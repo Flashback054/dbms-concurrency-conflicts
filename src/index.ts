@@ -25,7 +25,7 @@ AppDataSource.initialize()
     app.use(bodyParser.urlencoded({ extended: true }));
 
     const hbs = create({
-      extname: ".hbs",
+      extname: ".html",
       defaultLayout: "main",
       layoutsDir: __dirname + "/views/",
       partialsDir: __dirname + "/views/partials/",
@@ -38,8 +38,8 @@ AppDataSource.initialize()
         },
       },
     });
-    app.engine("hbs", hbs.engine);
-    app.set("view engine", "hbs");
+    app.engine("html", hbs.engine);
+    app.set("view engine", "html");
     app.set("views", __dirname + "/views");
 
     app.use("/", routes);

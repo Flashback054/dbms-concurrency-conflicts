@@ -1,5 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { NextFunction, Request, Response } from "express";
+import { KhachHang } from "../entity";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -49,13 +50,23 @@ export default class StoreProcController {
     next: NextFunction
   ) {
     const { MaTaiKhoan } = request.body;
-    const result = await AppDataSource.query(`
-      EXECUTE USP_KHOATAIKHOAN ${MaTaiKhoan}
-    `);
 
-    response.status(200).json({
-      data: result,
-    });
+    try {
+      await AppDataSource.query(`
+        EXECUTE USP_KHOATAIKHOAN ${MaTaiKhoan}
+      `);
+
+      response.redirect("/khach-hang");
+    } catch (error) {
+      const customers = await AppDataSource.getRepository(KhachHang).find();
+
+      console.log(error);
+      response.render("pages/khach-hang", {
+        heading: "Danh sách khách hàng",
+        error: "Deadlock! Khóa tài khoản thất bại!",
+        customers,
+      });
+    }
   }
 
   static async Conversion_USP_CAPNHATTHONGTIN(
@@ -64,13 +75,31 @@ export default class StoreProcController {
     next: NextFunction
   ) {
     const { MaKhachHang, MatKhau } = request.body;
-    const result = await AppDataSource.query(`
-      EXECUTE USP_CAPNHATTHONGTIN ${MaKhachHang}, ${MatKhau}
-    `);
 
-    response.status(200).json({
-      data: result,
-    });
+    try {
+      await AppDataSource.query(`
+        EXECUTE USP_CAPNHATTHONGTIN ${MaKhachHang}, ${MatKhau}
+      `);
+      response.render("pages/cap-nhat-mat-khau", {
+        success: "Cập nhật tài khoản thành công!",
+        heading: "Đổi mật khẩu",
+        customer: {
+          MaKhachHang: MaKhachHang,
+          MatKhau: MatKhau,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+
+      response.render("pages/cap-nhat-mat-khau", {
+        heading: "Đổi mật khẩu",
+        error: "Deadlock! Cập nhật tài khoản thất bại!",
+        customer: {
+          MaKhachHang: MaKhachHang,
+          MatKhau: MatKhau,
+        },
+      });
+    }
   }
 
   static async LostUpdate_sp_UpdateSoluongtonThuoc_Before(

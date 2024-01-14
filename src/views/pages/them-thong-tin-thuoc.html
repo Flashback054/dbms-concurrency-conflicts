@@ -1,13 +1,4 @@
-{{#if error}}
-  <div class="bg-red-500 text-white text-center py-3 px-4 my-4">
-    {{error}}
-  </div>
-{{/if}}
-{{#if success}}
-  <div class="bg-green-500 text-white text-center py-3 px-4 my-4">
-    {{success}}
-  </div>
-{{/if}}
+{{> messages}}
 
 <form action="/thuoc" method="POST" class="max-w-sm mx-auto space-y-3">
   <div class="flex flex-col gap-1">
@@ -73,13 +64,13 @@
       value="2023-10-15"
     />
   </div>
-  <div class="flex justify-end gap-2 text-xl pt-3">
+  <div class="flex justify-end gap-2 pt-3 text-xl">
     <button
-      class="bg-gray-500 rounded-md text-gray-50 px-4 py-1"
+      class="px-4 py-1 bg-gray-500 rounded-md text-gray-50"
       type="reset"
     >Hủy</button>
     <button
-      class="bg-green-500 rounded-md text-gray-50 px-4 py-1"
+      class="px-4 py-1 bg-green-500 rounded-md text-gray-50"
       type="submit"
     >Thêm</button>
   </div>

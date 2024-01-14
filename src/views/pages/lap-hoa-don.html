@@ -1,0 +1,69 @@
+<div class="container mt-5">
+  <div id="content">
+    {{#with data}}
+    <div class="mb-4 text-center">
+      <h1>Lập Hóa Đơn</h1>
+    </div>
+
+    <div class="invoice-container">
+      <h4 class="mb-3">NHA KHOA CỪU XÁM</h4>
+      <p><strong>Mã hồ sơ:</strong> {{recordId}}</p>
+      <p><strong>Lần khám:</strong>{{visitNumber}}</p>
+      <p><strong>Họ tên:</strong> {{fullname}}</p>
+      <p><strong>SDT:</strong> {{phone}}</p>
+      <p><strong>Ngày sinh:</strong> {{birthdate}}</p>
+      <p><strong>Ngày in hóa đơn:</strong> {{invoiceDate}}</p>
+
+      <h4 class="mt-4 mb-2">Dịch vụ</h4>
+      <table class="table table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Tên dịch vụ</th>
+            <th scope="col">Phí dịch vụ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each services}}
+          <tr>
+            <td class="bg-light">{{this.name}}</td>
+            <td class="bg-light">{{this.price}} VNĐ</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <h4 class="mt-4 mb-2">Thuốc</h4>
+
+      <table class="table mb-4 table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Tên thuốc</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Đơn giá</th>
+            <th scope="col">Tổng tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each medications}}
+          <tr>
+            <td class="bg-light">{{this.name}}</td>
+            <td class="bg-light">{{this.quantity}}</td>
+            <td class="bg-light">{{this.price}} VNĐ</td>
+            <td class="bg-light">{{this.totalPrice}} VNĐ</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class="text-right">
+        <h4>Thành tiền: {{total}} VNĐ</h4>
+      </div>
+    </div>
+
+    <div class="mb-4 text-center">
+      <button class="btn btn-secondary btn-space">Quay lại</button>
+      <button class="btn btn-primary">Xác nhận</button>
+    </div>
+    {{/with}}
+  </div>
+</div>

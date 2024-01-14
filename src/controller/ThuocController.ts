@@ -1,7 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { NextFunction, Request, Response } from "express";
 import { Thuoc } from "../entity";
-import StoreProcController from "./StoreProcController";
 
 export async function index(req: Request, res: Response, next: NextFunction) {
   const medicines = await AppDataSource.getRepository(Thuoc).find();
@@ -91,10 +90,4 @@ export async function destroy(req: Request, res: Response, next: NextFunction) {
   });
 
   res.redirect("/thuoc");
-}
-
-export function stockStats(req: Request, res: Response, next: NextFunction) {
-  res.render("pages/thong-ke-thuoc", {
-    heading: "Thống kê số lượng thuốc",
-  });
 }
