@@ -1,0 +1,28 @@
+{{#with data}}
+  <div>
+    <div class="grid mb-8 gap-4 grid-cols-2 grid-rows-2 max-w-[512px] mx-auto">
+      <section
+        class="flex flex-col items-center justify-center p-8 row-span-2 border-2 border-green-200 text-green-700 rounded-md shadow-sm bg-green-100"
+      >
+        <h3 class="font-medium text-xl">Tổng số lượng</h3>
+        <span class="font-bold text-3xl">{{NoInstances}}</span>
+      </section>
+      <section
+        class="flex flex-col items-center justify-center p-8 border-2 border-red-200 text-red-700 rounded-md shadow-sm bg-red-100"
+      >
+        <h3 class="font-medium text-xl">Hết hạn sử dụng</h3>
+        <span class="font-bold text-3xl">{{NoExpiredInstances}}</span>
+      </section>
+      <section
+        class="flex flex-col items-center justify-center p-8 border-2 border-zinc-200 text-zinc-700 rounded-md shadow-sm bg-zinc-100"
+      >
+        <h3 class="font-medium text-xl">Hết hàng</h3>
+        <span class="font-bold text-3xl">{{NoOOSInstances}}</span>
+      </section>
+    </div>
+
+    <form action="/thuoc/thong-ke-thuoc" class="text-center">
+      <button class="px-3 py-1 rounded-md bg-sky-200 text-sky-900">Làm mới</button>
+    </form>
+  </div>
+{{/with}}

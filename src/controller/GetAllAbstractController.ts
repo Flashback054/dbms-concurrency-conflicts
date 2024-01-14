@@ -4,15 +4,27 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 
 export default function getAll(entity: any, relations?: string[]) {
-	return async (req: Request, res: Response) => {
-		const repository = AppDataSource.getRepository(entity);
-		const entities = await repository.find({
-			relations,
-			where: req.query,
-		});
+  return async (req: Request, res: Response) => {
+    const repository = AppDataSource.getRepository(entity);
+    const entities = await repository.find({
+      relations,
+      where: req.query,
+    });
 
-		res.status(200).json({
-			data: entities,
-		});
-	};
+    res.status(200).json({
+      data: entities,
+    });
+  };
+}
+
+export function getAllRawData(entity: any, relations?: string[]) {
+  return async (req: Request, res: Response) => {
+    const repository = AppDataSource.getRepository(entity);
+    const entities = await repository.find({
+      relations,
+      where: req.query,
+    });
+
+    return entities;
+  };
 }
