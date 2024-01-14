@@ -1,5 +1,7 @@
 import { AppDataSource } from "../data-source";
 import { NextFunction, Request, Response } from "express";
+import * as fs from "fs";
+import * as path from "path";
 
 export default class StoreProcController {
   static async DirtyRead_UpdateLichHen(
@@ -159,5 +161,180 @@ export default class StoreProcController {
     response.status(200).json({
       data: result,
     });
+  }
+
+  static async DirtyRead_NoFix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/DirtyRead/CapNhatLich.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async DirtyRead_Fix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/DirtyRead/CapNhatLich_fix.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async Conversion_NoFix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/Conversion/Conversion-deadlock.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async Conversion_Fix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/Conversion/Conversion-deadlock_fix.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async LostUpdate_NoFix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/LostUpdate/7_LostUpdate.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async LostUpdate_Fix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/LostUpdate/7_LostUpdate_FIX.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async PhantomRead_NoFix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/PhantomRead/4_PhantomRead.sql"),
+      "utf8"
+    );
+
+    // Execute SQL
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
+  }
+
+  static async PhantomRead_Fix(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    // Read .SQL file
+    const sql = fs.readFileSync(
+      path.join(__dirname, "../sql/PhantomRead/4_PhantomRead_FIX.sql"),
+      "utf8"
+    );
+
+    // Split sql by GO
+    const sqls = sql.split("GO");
+
+    // Execute SQL
+    await AppDataSource.query(sqls[0]);
+    await AppDataSource.query(sqls[1]);
+
+    response.status(200).json({});
   }
 }
