@@ -1,83 +1,81 @@
-<div class="container mt-5">
-  <!-- Tiêu đề Thanh Toán -->
-  <div class="mb-5 text-center">
-    <h1>Thanh Toán</h1>
-  </div>
+<h1 class="mb-4 text-center">Thanh Toán</h1>
 
-  <!-- Form Tra cứu hồ sơ khám -->
-  <div class="card">
-    <div class="card-body">
-      <h4 class="mb-4 text-center card-header">Tra cứu hồ sơ khám</h4>
-      <form id="searchForm">
-        <div class="form-group">
-          <label for="birthdate">Ngày sinh(*):</label>
-          <input
-            type="text"
-            class="form-control"
-            id="birthdate"
-            placeholder="dd/mm/yyyy"
-          />
-        </div>
-        <div class="form-group">
-          <label for="fullname">Họ và tên(*):</label>
-          <input
-            type="text"
-            class="form-control"
-            id="fullname"
-            placeholder="Nguyễn Văn A"
-          />
-        </div>
-        <div class="form-group">
-          <label for="phone">Số điện thoại(*):</label>
-          <input
-            type="tel"
-            class="form-control"
-            id="phone"
-            placeholder="0912345678"
-          />
-        </div>
-        <div class="text-center">
-          <h5>Hoặc</h5>
-        </div>
-        <div class="form-group">
-          <label for="recordId">Mã hồ sơ(*):</label>
-          <input
-            type="text"
-            class="form-control"
-            id="recordId"
-            placeholder="HS001"
-          />
-        </div>
-        <div class="text-right">
-          <button type="submit" class="btn btn-primary">Tra cứu</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  {{#with searchResults}}
-  <!-- Kết quả tra cứu -->
-  <div id="results-container" class="mt-4">
-    <!-- Thông tin cá nhân -->
-    <div class="mb-3 card">
-      <div class="card-header">Thông Tin Cá Nhân</div>
-      <div class="card-body">
-        <h5 class="card-title">{{personalInfo.fullname}}</h5>
-        <p class="card-text">
-          <strong>Mã hồ sơ:</strong> {{personalInfo.recordId}}
-        </p>
-        <p class="card-text">
-          <strong>Số điện thoại:</strong> {{personalInfo.phone}}
-        </p>
-        <p class="card-text">
-          <strong>Ngày sinh:</strong> {{personalInfo.birthdate}}
-        </p>
+{{#unless searchResults}}
+<!-- Form Tra cứu hồ sơ khám -->
+<div class="max-w-lg mx-auto mb-4 card">
+  <div class="card-body">
+    <h4 class="mb-4 text-center card-header">Tra cứu hồ sơ khám</h4>
+    <form id="searchForm">
+      <div class="form-group">
+        <label for="birthdate">Ngày sinh(*):</label>
+        <input
+          type="text"
+          class="form-control"
+          id="birthdate"
+          placeholder="dd/mm/yyyy"
+        />
       </div>
+      <div class="form-group">
+        <label for="fullname">Họ và tên(*):</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fullname"
+          placeholder="Nguyễn Văn A"
+        />
+      </div>
+      <div class="form-group">
+        <label for="phone">Số điện thoại(*):</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="phone"
+          placeholder="0912345678"
+        />
+      </div>
+      <div class="text-center">
+        <h5>Hoặc</h5>
+      </div>
+      <div class="form-group">
+        <label for="recordId">Mã hồ sơ(*):</label>
+        <input
+          type="text"
+          class="form-control"
+          id="recordId"
+          placeholder="HS001"
+        />
+      </div>
+      <div class="text-right">
+        <button type="submit" class="btn btn-primary">Tra cứu</button>
+      </div>
+    </form>
+  </div>
+</div>
+{{else}}
+<!--  -->
+{{#with searchResults}}
+<div class="max-w-3xl mx-auto">
+  <!-- Thông tin cá nhân -->
+  <div class="max-w-xl mx-auto mb-3 card">
+    <div class="card-header">Thông Tin Cá Nhân</div>
+    <div class="card-body">
+      <h5 class="card-title">{{personalInfo.fullname}}</h5>
+      <p class="card-text">
+        <strong>Mã hồ sơ:</strong> {{personalInfo.recordId}}
+      </p>
+      <p class="card-text">
+        <strong>Số điện thoại:</strong> {{personalInfo.phone}}
+      </p>
+      <p class="card-text">
+        <strong>Ngày sinh:</strong> {{personalInfo.birthdate}}
+      </p>
     </div>
+  </div>
 
-    <!-- Danh sách các lần khám -->
-    {{#each visits}}
-    <div class="mb-3 card">
+  <!-- Danh sách các lần khám -->
+  {{#each visits}}
+  <div class="space-y-4">
+    <div class="card">
       <div class="card-body">
         <h5 class="card-title">Lần khám: {{times}}</h5>
         <span><strong>Người phụ trách:</strong> {{dentist}} </span>
@@ -114,7 +112,9 @@
         {{/if}}
       </div>
     </div>
-    {{/each}}
   </div>
-  {{/with}}
+  {{/each}}
 </div>
+{{/with}}
+<!--  -->
+{{/unless}}

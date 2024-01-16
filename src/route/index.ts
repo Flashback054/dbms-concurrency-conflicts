@@ -1,16 +1,98 @@
 import { Router } from "express";
 import auth from "./auth.route";
-import thuoc from "./thuoc.route";
+import khachHang from "./khachHang.route";
 import lichHen from "./lichHen.route";
 import storeProc from "./storeProc.route";
-import khachHang from "./khachHang.route";
+import thuoc from "./thuoc.route";
 
 const routes = Router();
 
 routes.get("/", (req, res) => {
+  type ConflictPairItem = {
+    label: string;
+    url: string;
+  };
+
+  type ConflictPair = {
+    label: string;
+    type: string;
+    color: string;
+    item1?: ConflictPairItem;
+    item2?: ConflictPairItem;
+  };
+
+  const pairs: ConflictPair[] = [
+    {
+      label: "21120499 - Nguyễn Duy Long",
+      type: "Dirty Read",
+      color: "blue",
+      item1: {
+        label: "Tình huống 1: ",
+        url: "/tai-khoan/cap-nhat-mat-khau",
+      },
+      item2: {
+        label: "Tình huống 2: ",
+        url: "/tai-khoan",
+      },
+    },
+    {
+      label: "21120500 - Mai Văn Minh",
+      type: "Conversion deadlock",
+      color: "orange",
+      item1: {
+        label: "Cập nhật mật khẩu",
+        url: "/khach-hang",
+      },
+      item2: {
+        label: "Khóa tài khoản",
+        url: "/khach-hang",
+      },
+    },
+    {
+      label: "21120502 - Trần Đức Minh",
+      type: "Unrepeatable read",
+      color: "purple",
+      item1: {
+        label: "Tình huống 1: ",
+        url: "/tai-khoan/cap-nhat-mat-khau",
+      },
+      item2: {
+        label: "Tình huống 2: ",
+        url: "/tai-khoan",
+      },
+    },
+    {
+      label: "21120521 - Nguyễn Phúc Phát",
+      type: "Lost update",
+      color: "yellow",
+      item1: {
+        label: "Lập hóa đơn ",
+        url: "/lap-hoa-don",
+      },
+      item2: {
+        label: "Thanh toán",
+        url: "/thanh-toan",
+      },
+    },
+    {
+      label: "21120524 - Trương Minh Phát",
+      type: "Phantom Read",
+      color: "green",
+      item1: {
+        label: "Thống kê số lượng thuốc: ",
+        url: "/thuoc/thong-ke-thuoc",
+      },
+      item2: {
+        label: "Thêm thông tin thuốc: ",
+        url: "/thuoc/them-thong-tin-thuoc",
+      },
+    },
+  ];
+
   res.render("pages/trang-chu", {
     heading: "Danh sách các tình huống tranh chấp",
-    noBack: true,
+    isBackHidden: true,
+    pairs,
   });
 });
 
