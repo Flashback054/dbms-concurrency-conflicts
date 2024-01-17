@@ -105,13 +105,19 @@ export default class StoreProcController {
 		next: NextFunction
 	) {
 		const { MaThuoc, SoThuoc } = request.body;
-		const result = await AppDataSource.query(`
-      EXECUTE sp_UpdateSoluongtonThuoc_Before ${MaThuoc}, ${SoThuoc}
-    `);
-
-		response.status(200).json({
-			data: result,
-		});
+		console.log(MaThuoc, SoThuoc);
+		try{
+			const result = await AppDataSource.query(`
+      		EXECUTE sp_UpdateSoluongtonThuoc_Before ${MaThuoc}, ${SoThuoc}
+    		`);
+			response.redirect("/thuoc");
+		}
+		catch(error){
+			response.render("pages/lap-hoa-don", {
+				layout: "main-boostrap",
+				error: error.message.toString().replace("Error: ", ""),
+			});
+		}
 	}
 
 	static async LostUpdate_sp_UpdateSoluongtonThuoc_After(
@@ -234,6 +240,7 @@ export default class StoreProcController {
 			"Conversion/5_ConversionDeadlock",
 			false
 		);
+		// await StoreProcController.Execute_SQL("LostUpdate/7_LostUpdate", false);
 	}
 
 	static async Errors_Fix() {
@@ -242,5 +249,7 @@ export default class StoreProcController {
 			"Conversion/5_ConversionDeadlock",
 			true
 		);
+		// await StoreProcController.Execute_SQL("LostUpdate/7_LostUpdate", true);
+
 	}
 }

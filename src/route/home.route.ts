@@ -70,8 +70,8 @@ router.get("/", async (req, res) => {
         url: "/lap-hoa-don",
       },
       item2: {
-        label: "Thanh toán",
-        url: "/thanh-toan",
+        label: "Cập nhật thuốc",
+        url: "/thuoc",
       },
     },
     {
