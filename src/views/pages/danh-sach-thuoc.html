@@ -1,0 +1,57 @@
+<h2
+  class="text-center font-medium mb-4 bg-green-200 w-fit mx-auto py-1 px-3 rounded-md"
+>
+  <span class="text-green-600">{{noInstances}}</span>
+  Thông tin thuốc trong kho
+</h2>
+<ul class="flex gap-3 flex-col text-lg mb-6 max-w-[400px] mx-auto">
+  {{#each medicines as |medicine|}}
+    <li
+      class="py-2 px-4 border-2 border-gray-200 rounded-md shadow-sm flex gap-8 justify-between items-center hover:bg-gray-50 transition-colors"
+    >
+      <div>
+        <span>#{{medicine.MaThuoc}}</span>
+        <span class="font-bold"> · </span>
+        <span class="font-medium">{{medicine.TenThuoc}}</span>
+        <span class="font-bold"> · </span>
+        <span class="font-medium">{{medicine.SoLuongTon}}
+          {{medicine.DonViTinh}}</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="/thuoc/cap-nhat-thuoc/{{medicine.MaThuoc}}">
+          <i class="fa-regular fa-pen-to-square"></i>
+        </a>
+        <a href="/thuoc/{{medicine.MaThuoc}}">
+          <i class="fa-regular fa-eye"></i>
+        </a>
+        <form
+          action="/thuoc/{{medicine.MaThuoc}}?_method=DELETE"
+          class="mb-0"
+          method="POST"
+        >
+          <button>
+            <i class="fa-solid fa-trash text-red-600"></i>
+          </button>
+        </form>
+      </div>
+    </li>
+  {{/each}}
+</ul>
+
+<div class="flex items-center gap-4 justify-center">
+  <a
+    href="/thuoc/them-thong-tin-thuoc"
+    class="flex px-2 py-1 rounded-md bg-green-100 items-center gap-1"
+  >
+    <i class="fa-solid fa-square-plus"></i>
+    Thêm thuốc
+  </a>
+
+  <a
+    href="/thuoc/thong-ke-thuoc"
+    class="flex px-2 py-1 rounded-md bg-violet-100 items-center gap-1"
+  >
+    <i class="fa-solid fa-chart-simple"></i>
+    Thống kê số lượng
+  </a>
+</div>

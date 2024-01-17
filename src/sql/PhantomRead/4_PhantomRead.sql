@@ -48,15 +48,15 @@ BEGIN TRAN
 	BEGIN TRY
 		(SELECT @NoInstances = COUNT(*) FROM Thuoc)
 
-		(SELECT @NoExpiredInstances = COUNT(*) 
+		(SELECT @NoExpiredInstances = COUNT(*)
 			FROM Thuoc
 			WHERE NgayHetHan < GETDATE())
 
 		---------------------------------
-		WAITFOR DELAY '0:0:6'
+		WAITFOR DELAY '0:0:2'
 		---------------------------------
 
-		(SELECT @NoOOSInstances = COUNT(*) 
+		(SELECT @NoOOSInstances = COUNT(*)
 			 FROM Thuoc
 			 WHERE SoLuongTon <= 0)
 	END TRY

@@ -1,0 +1,59 @@
+<h2
+  class="px-3 py-1 mx-auto mb-4 font-medium text-center bg-green-200 rounded-md w-fit"
+>
+  <span class="text-green-600">{{noInstances}}</span>
+  Tài khoản khách hàng
+</h2>
+
+{{> messages}}
+
+<ul class="flex gap-3 flex-col text-lg mb-6 max-w-[480px] mx-auto">
+  {{#each customers as |customer|}}
+    <li
+      class="flex items-center justify-between gap-8 px-4 py-2 transition-colors border-2 border-gray-200 rounded-md shadow-sm hover:bg-gray-50"
+    >
+      <div>
+        <span>#{{customer.MaKhachHang}}</span>
+        <span class="font-bold"> · </span>
+        <span class="font-medium">{{customer.HoTen}}</span>
+        <span class="font-bold"> · </span>
+        <span class="font-medium">{{customer.SDT}}</span>
+
+        {{#if customer.TrangThai}}
+          <span class="px-2 py-1 ml-2 text-sm text-white bg-red-500 rounded-md">
+            Đã khóa
+          </span>
+        {{/if}}
+      </div>
+      <div class="flex gap-3">
+        {{#if customer.TrangThai}}
+          <form
+            action="/khach-hang/mo-khoa-tai-khoan"
+            class="mb-0"
+            method="POST"
+          >
+          <input type="hidden" name="MaTaiKhoan" value="{{MaKhachHang}}">
+            <button>
+              <i class="fa-solid fa-unlock"></i>
+            </button>
+          </form>
+        {{else}}
+          <a href="/khach-hang/cap-nhat-mat-khau/{{customer.MaKhachHang}}">
+            <i class="fa-solid fa-key"></i>
+          </a>
+
+          <form
+            action="/khach-hang/khoa-tai-khoan"
+            class="mb-0"
+            method="POST"
+          >
+          <input type="hidden" name="MaTaiKhoan" value="{{MaKhachHang}}">
+            <button>
+              <i class="text-red-600 fa-solid fa-lock"></i>
+            </button>
+          </form>
+        {{/if}}
+      </div>
+    </li>
+  {{/each}}
+</ul>

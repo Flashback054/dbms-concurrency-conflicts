@@ -1,0 +1,77 @@
+{{> messages}}
+
+<form action="/thuoc" method="POST" class="max-w-sm mx-auto space-y-3">
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="name">Tên thuốc</label>
+    <input type="text" name="TenThuoc" id="name" required value="Amoxicillin" />
+  </div>
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="price">Đơn giá</label>
+    <input
+      type="number"
+      name="DonGia"
+      id="price"
+      required
+      min="10000"
+      value="20000"
+    />
+  </div>
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="quantity">Số lượng</label>
+    <input
+      type="number"
+      name="SoLuongTon"
+      id="quantity"
+      required
+      min="0"
+      value="0"
+    />
+  </div>
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="indication">Chỉ định</label>
+    <textarea
+      name="ChiDinh"
+      id="indication"
+      required
+      minlength="10"
+      maxlength="255"
+    >Kháng sinh Amoxicillin, chống viêm, chống nhiễm trùng.</textarea>
+  </div>
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="unit">Đơn vị tính</label>
+    <select name="DonViTinh" id="unit" required>
+      <option value="viên" selected>Viên</option>
+      <option value="hộp">Hộp</option>
+      <option value="chai">Chai</option>
+      <option value="tuýp">Tuýp</option>
+      <option value="ống">Ống</option>
+      <option value="lọ">Lọ</option>
+      <option value="gói">Gói</option>
+      <option value="túi">Túi</option>
+      <option value="vỉ">Vỉ</option>
+      <option value="ống">Ống</option>
+      <option value="cây">Cây</option>
+      <option value="cái">Cái</option>
+    </select>
+  </div>
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="expiration">Hạn sử dụng</label>
+    <input
+      type="date"
+      name="NgayHetHan"
+      id="expiration"
+      required
+      value="2023-10-15"
+    />
+  </div>
+  <div class="flex justify-end gap-2 pt-3 text-xl">
+    <button
+      class="px-4 py-1 bg-gray-500 rounded-md text-gray-50"
+      type="reset"
+    >Hủy</button>
+    <button
+      class="px-4 py-1 bg-green-500 rounded-md text-gray-50"
+      type="submit"
+    >Thêm</button>
+  </div>
+</form>

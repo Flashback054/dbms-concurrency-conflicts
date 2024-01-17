@@ -1,0 +1,31 @@
+{{> messages}}
+
+{{#with customer}}
+  <form
+    action="/khach-hang/cap-nhat-mat-khau/{{MaKhachHang}}?_method=PUT"
+    method="POST"
+    class="max-w-sm mx-auto space-y-3"
+  >
+    <input type="hidden" name="MaKhachHang" value="{{MaKhachHang}}" />
+    <div class="flex flex-col gap-1">
+      <label class="font-medium" for="pass">Mật khẩu cũ</label>
+      <input
+        type="text"
+        id="pass"
+        value="{{MatKhau}}"
+        disabled
+        class="bg-gray-200 cursor-not-allowed"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label class="font-medium" for="pass">Mật khẩu mới</label>
+      <input type="text" name="MatKhau" id="pass" required minlength="6" />
+    </div>
+    <div class="flex justify-end gap-2 pt-3 text-xl">
+      <button
+        class="px-4 py-1 bg-green-500 rounded-md text-gray-50"
+        type="submit"
+      >Cập nhật</button>
+    </div>
+  </form>
+{{/with}}

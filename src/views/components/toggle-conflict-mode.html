@@ -1,0 +1,13 @@
+<div
+  class="flex flex-col items-center justify-center gap-2 p-4 mx-auto border rounded-md shadow-sm w-fit bg-sky-100"
+>
+  <div>
+    <span class="text-sm italic font-medium">Chế độ hiện tại: </span>
+    <span class="p-1 rounded-sm bg-zin-200">{{modeLabel}}</span>
+  </div>
+  <div>
+    <form action="/toggle-mode" method="POST" class="mb-0">
+      <button class="px-3 py-1 bg-red-500 rounded-md">Chuyên chế độ</button>
+    </form>
+  </div>
+</div>
