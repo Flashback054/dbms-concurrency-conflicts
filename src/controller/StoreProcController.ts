@@ -60,8 +60,7 @@ export default class StoreProcController {
     } catch (error) {
       const customers = await AppDataSource.getRepository(KhachHang).find();
 
-      console.log(error);
-      response.render("pages/khach-hang", {
+      response.render("pages/danh-sach-khach-hang", {
         heading: "Danh sách khách hàng",
         error: "Deadlock! Khóa tài khoản thất bại!",
         customers,
@@ -84,19 +83,17 @@ export default class StoreProcController {
         success: "Cập nhật tài khoản thành công!",
         heading: "Đổi mật khẩu",
         customer: {
-          MaKhachHang: MaKhachHang,
-          MatKhau: MatKhau,
+          MaKhachHang,
+          MatKhau,
         },
       });
     } catch (error) {
-      console.log(error);
-
       response.render("pages/cap-nhat-mat-khau", {
         heading: "Đổi mật khẩu",
         error: "Deadlock! Cập nhật tài khoản thất bại!",
         customer: {
-          MaKhachHang: MaKhachHang,
-          MatKhau: MatKhau,
+          MaKhachHang,
+          MatKhau,
         },
       });
     }

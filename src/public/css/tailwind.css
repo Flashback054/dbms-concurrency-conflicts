@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .phucphat-container {
+    @apply max-w-3xl px-4 mx-auto;
+  }
+
+  .phucphat-spacing {
+    @apply space-y-4;
+  }
+}

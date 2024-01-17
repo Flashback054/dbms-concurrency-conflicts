@@ -1,124 +1,41 @@
-<nav>
-  <ul class="p-4">
-    <li class="text-center">
-      <a href="/thuoc" class="underline uppercase underline-offset-2"
-        >Danh sách thuốc</a
-      >
-    </li>
-  </ul>
-</nav>
+{{> toggle-conflict-mode}}
 
+<!--  -->
+{{> nav}}
+
+<!--  -->
+
+{{#if pairs.length}}
 <ul class="space-y-4">
+  {{#each pairs as |pair|}}
+  <!--  -->
+  {{#with pair}}
   <li
-    class="px-2 py-6 border-2 border-blue-200 rounded-md shadow-sm bg-blue-50"
-  >
-    <section class="flex flex-col items-center gap-2 font-medium text-center">
-      <h2 class="px-3 py-1 text-blue-900 rounded-md w-fit bg-zinc-100">
-        21120499 - Nguyễn Duy Long
-      </h2>
-      <h3 class="uppercase">Dirty Read</h3>
-      <div class="flex flex-col font-normal text-left">
-        <div>
-          <span class="italic font-medium">Tình huống 1: </span>
-        </div>
-        <div>
-          <span class="italic font-medium">Tình huống 2: </span>
-        </div>
-      </div>
-    </section>
-  </li>
-  <li
-    class="px-2 py-6 border-2 border-orange-200 rounded-md shadow-sm bg-orange-50"
-  >
-    <section class="flex flex-col items-center gap-2 font-medium text-center">
-      <h2 class="px-3 py-1 text-orange-900 rounded-md w-fit bg-zinc-100">
-        21120500 - Mai Văn Minh
-      </h2>
-      <h3 class="uppercase">Conversion deadlock</h3>
-      <div class="flex flex-col font-normal text-left">
-        <div>
-          <span class="italic font-medium">Tình huống 1: </span>
-          <a
-            class="underline underline-offset-2"
-            href="/tai-khoan/cap-nhat-mat-khau"
-            >Cập nhật mật khẩu</a
-          >
-        </div>
-        <div>
-          <span class="italic font-medium">Tình huống 2: </span>
-          <a class="underline underline-offset-2" href="/tai-khoan"
-            >Khoá tài khoản</a
-          >
-        </div>
-      </div>
-    </section>
-  </li>
-  <li
-    class="px-2 py-6 border-2 border-purple-200 rounded-md shadow-sm bg-purple-50"
-  >
-    <section class="flex flex-col items-center gap-2 font-medium text-center">
-      <h2 class="px-3 py-1 text-purple-900 rounded-md w-fit bg-zinc-100">
-        21120502 - Trần Đức Minh
-      </h2>
-      <h3 class="uppercase">Unrepeatable Read</h3>
-      <div class="flex flex-col font-normal text-left">
-        <div>
-          <span class="italic font-medium">Tình huống 1: </span>
-        </div>
-        <div>
-          <span class="italic font-medium">Tình huống 2: </span>
-        </div>
-      </div>
-    </section>
-  </li>
-  <li
-    class="px-2 py-6 border-2 border-yellow-200 rounded-md shadow-sm bg-yellow-50"
-  >
-    <section class="flex flex-col items-center gap-2 font-medium text-center">
-      <h2 class="px-3 py-1 text-yellow-900 rounded-md w-fit bg-zinc-100">
-        21120521 - Nguyễn Phúc Phát
-      </h2>
-      <h3 class="uppercase">Lost Update</h3>
-      <div class="flex flex-col font-normal text-left">
-        <div>
-          <span class="italic font-medium">Tình huống 1: </span>
-          <a class="underline underline-offset-2" href="/thanh-toan"
-            >Thanh toán</a
-          >
-        </div>
-        <div>
-          <span class="italic font-medium">Tình huống 2: </span>
-          <a class="underline underline-offset-2" href="/lap-hoa-don"
-            >Lập hóa đơn</a
-          >
-        </div>
-      </div>
-    </section>
-  </li>
-  <li
-    class="px-2 py-6 border-2 border-green-200 rounded-md shadow-sm bg-green-50"
+    class="px-2 py-6 border-2 border-{{color}}-200 rounded-md shadow-sm bg-{{color}}-50"
   >
     <section class="flex flex-col items-center gap-2 font-medium text-center">
       <h2 class="px-3 py-1 text-green-900 rounded-md w-fit bg-zinc-100">
-        21120524 - Trương Minh Phát
+        {{label}}
       </h2>
-      <h3 class="uppercase">Phantom Read</h3>
+      <h3 class="uppercase">{{type}}</h3>
       <div class="flex flex-col font-normal text-left">
         <div>
           <span class="italic font-medium">Tình huống 1: </span>
-          <a class="underline underline-offset-2" href="/thuoc/thong-ke-thuoc"
-            >Thống kê số lượng thuốc</a
+          <a class="underline underline-offset-2" href="{{item1.url}}"
+            >{{item1.label}}</a
           >
         </div>
         <div>
           <span class="italic font-medium">Tình huống 2: </span>
-          <a
-            class="underline underline-offset-2"
-            href="/thuoc/them-thong-tin-thuoc"
-            >Thêm thông tin thuốc</a
+          <a class="underline underline-offset-2" href="{{item2.url}}"
+            >{{item2.label}}</a
           >
         </div>
       </div>
     </section>
   </li>
+  {{/with}}
+  <!--  -->
+  {{/each}}
 </ul>
+{{/if}}
