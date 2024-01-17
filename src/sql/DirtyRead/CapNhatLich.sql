@@ -6,30 +6,28 @@ CREATE OR ALTER PROCEDURE UpdateLichHen
     @ThoiGianBatDau TIME,
     @ThoiGianKetThuc TIME
 AS
+DECLARE @ErrorMsg VARCHAR(2000)
 BEGIN TRAN
     BEGIN TRY
         -- Bước 1: Kiểm tra sự tồn tại của lịch hẹn
         IF NOT EXISTS (SELECT 1 FROM LichHen WHERE MaLichHen = @MaLichHen)
         BEGIN
-            PRINT N'Lịch hẹn không tồn tại.';
-			ROLLBACK TRAN
-            RETURN 0
+            SET @ErrorMsg = N'Lịch hẹn không tồn tại.';
+			RAISERROR(@ErrorMsg, 16, 1);
         END
 
         -- Bước 2: Kiểm tra lịch của NhaSi
         IF NOT EXISTS (SELECT 1 FROM LichHen WHERE MaLichHen = @MaLichHen AND MaNhaSi = @MaNhaSi)
         BEGIN
-            PRINT N'NhaSi không có quyền cập nhật lịch này.';
-            ROLLBACK TRAN
-            RETURN 0
+            SET @ErrorMsg = N'NhaSi không có quyền cập nhật lịch này.';
+			RAISERROR(@ErrorMsg, 16, 1);
         END
 
     	-- Bước 3: Kiểm tra lịch của NhaSi có được đặt hay chưa, được đặt rồi thì không thể update
         IF EXISTS (SELECT 1 FROM LichHen WHERE MaLichHen = @MaLichHen AND MaNguoiDat IS NOT NULL)
         BEGIN
-            PRINT N'NhaSi không thể cập nhật 1 lịch đã được đặt.';
-            ROLLBACK TRAN
-            RETURN 0
+            SET @ErrorMsg =N'NhaSi không thể cập nhật 1 lịch đã được đặt.';
+			RAISERROR(@ErrorMsg, 16, 1);
         END
 
     	-- Bước 4: Update từng trường dữ liệu
@@ -64,7 +62,6 @@ BEGIN TRAN
         -- END
     END TRY
     BEGIN CATCH
-        DECLARE @ErrorMsg VARCHAR(2000)
 		SELECT @ErrorMsg = 'ERROR: ' + ERROR_MESSAGE()
 		RAISERROR(@ErrorMsg, 16,1)
 		ROLLBACK TRAN
@@ -86,6 +83,7 @@ CREATE or alter PROCEDURE ChiTietLich
 	@ThoiGianKetThuc TIME  OUT
 )
 AS
+DECLARE @ErrorMsg VARCHAR(2000)
 -- giao tác chỉ đọc thông tin lịch hẹn---
 SET TRAN ISOLATION LEVEL READ UNCOMMITTED
 BEGIN TRAN
@@ -94,9 +92,8 @@ BEGIN TRAN
 					FROM LichHen 
 					WHERE MaLichHen = @MaLichHen)
 		BEGIN
-			PRINT N'Lịch hẹn không tồn tại !'
-			ROLLBACK TRAN
-			RETURN 
+			SET @ErrorMsg = N'Lịch hẹn không tồn tại !';
+			RAISERROR(@ErrorMsg, 16, 1);
 		END
 
 		
@@ -115,8 +112,10 @@ BEGIN TRAN
 		-- Trả về kết quả
 	END TRY
 	BEGIN CATCH
-		PRINT N'LỖI HỆ THỐNG'
+		SELECT @ErrorMsg = 'ERROR: ' + ERROR_MESSAGE()
+		RAISERROR(@ErrorMsg, 16,1)
 		ROLLBACK TRAN
+		RETURN 0
 	END CATCH
 COMMIT TRAN
 RETURN 1
