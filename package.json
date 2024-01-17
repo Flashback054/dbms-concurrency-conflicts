@@ -38,7 +38,6 @@
 		"start": "ts-node src/index.ts",
 		"typeorm": "typeorm-ts-node-commonjs",
 		"dev": "nodemon src/index.ts",
-		"tailwind": "npx tailwindcss -i src/public/css/tailwind.css -o src/public/css/style.css --watch",
-		"watch": "concurrently \"npm run dev\" \"npm run tailwind\""
+		"tailwind": "npx tailwindcss -i src/public/css/tailwind.css -o src/public/css/style.css"
 	}
 }

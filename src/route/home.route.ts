@@ -54,8 +54,8 @@ router.get("/", async (req, res) => {
       label: "21120502 - Trần Đức Minh",
       type: "Unrepeatable read",
       item1: {
-        label: "Tình huống 1: ",
-        url: "/tai-khoan/cap-nhat-mat-khau",
+        label: "Nhập số lượng thuốc trong kho ",
+        url: "/thuoc",
       },
       item2: {
         label: "Tình huống 2: ",

@@ -91,3 +91,45 @@ export async function destroy(req: Request, res: Response, next: NextFunction) {
 
   res.redirect("/thuoc");
 }
+
+export async function editSoLuongTon(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+    where: { MaThuoc: +req.params.id },
+  });
+
+  res.render("pages/nhap-so-luong-thuoc", {
+    heading: "Nhập số lượng thuốc vô kho",
+    medicine,
+  });
+}
+
+export async function updateSoLuongTon(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { SoLuongTon, SoLuongNhap } = req.body;
+
+  try {
+    await AppDataSource.getRepository(Thuoc).update(
+      { MaThuoc: +req.params.id },
+      { SoLuongTon: Number(SoLuongTon) + Number(SoLuongNhap) }
+    );
+
+    res.redirect("/thuoc");
+  } catch (error) {
+    const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+      where: { MaThuoc: +req.params.id },
+    });
+
+    res.render("pages/nhap-so-luong-thuoc", {
+      heading: "Nhập số lượng thuốc vô kho",
+      medicine,
+      error: error.message.toString().replace("Error: ", ""),
+    });
+  }
+}

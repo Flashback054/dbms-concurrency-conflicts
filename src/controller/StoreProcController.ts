@@ -139,7 +139,7 @@ export default class StoreProcController {
 
     try {
       await AppDataSource.query(`
-        EXECUTE sp_InsertThuocInstance '${TenThuoc}', '${DonViTinh}', ${DonGia}, '${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
+        EXECUTE sp_InsertThuocInstance N'${TenThuoc}', N'${DonViTinh}', ${DonGia}, N'${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
       `);
 
       response.redirect("/thuoc");
@@ -195,12 +195,20 @@ export default class StoreProcController {
       "Conversion/5_ConversionDeadlock",
       false
     );
+    await StoreProcController.Execute_SQL(
+      "UnrepeatableRead/3_UnrepeatableRead",
+      false
+    );
   }
 
   static async Errors_Fix() {
     await StoreProcController.Execute_SQL("PhantomRead/4_PhantomRead", true);
     await StoreProcController.Execute_SQL(
       "Conversion/5_ConversionDeadlock",
+      true
+    );
+    await StoreProcController.Execute_SQL(
+      "UnrepeatableRead/3_UnrepeatableRead",
       true
     );
   }
