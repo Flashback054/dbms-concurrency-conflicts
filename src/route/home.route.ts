@@ -1,4 +1,5 @@
 import { Router } from "express";
+import StoreProcController from "../controller/StoreProcController";
 
 const router = Router();
 
@@ -6,7 +7,7 @@ type Mode = "conflict" | "resolved";
 
 let currentMode: Mode = "conflict";
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   type ConflictPairItem = {
     label: string;
     url: string;
@@ -88,9 +89,9 @@ router.get("/", (req, res) => {
   ];
 
   if (currentMode == "conflict") {
-    // run the sql script to resolve the conflicts
+    await StoreProcController.Errors_NoFix();
   } else {
-    // run the sql script to create the conflicts
+    await StoreProcController.Errors_Fix();
   }
 
   res.render("pages/trang-chu", {

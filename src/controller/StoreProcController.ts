@@ -138,23 +138,15 @@ export default class StoreProcController {
       request.body;
 
     try {
-      const result = await AppDataSource.query(`
-        DECLARE @INSERTED_COUNT INT
-        EXECUTE @INSERTED_COUNT = sp_InsertThuocInstance '${TenThuoc}', '${DonViTinh}', ${DonGia}, '${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
-        SELECT @INSERTED_COUNT AS INSERTED_COUNT
+      await AppDataSource.query(`
+        EXECUTE sp_InsertThuocInstance '${TenThuoc}', '${DonViTinh}', ${DonGia}, '${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
       `);
-
-      const insertedCount = result.at(0).INSERTED_COUNT;
-
-      if (insertedCount === 0) {
-        throw new Error("Thêm thông tin thuốc thất bại, tên thuốc đã tồn tại!");
-      }
 
       response.redirect("/thuoc");
     } catch (error) {
       response.render("pages/them-thong-tin-thuoc", {
         heading: "Thêm thông tin thuốc",
-        error: error.message,
+        error: error.message.toString().replace("Error: ", ""),
       });
     }
   }
@@ -170,7 +162,7 @@ export default class StoreProcController {
       @NoExpiredInstances INT = 0,
       @NoOOSInstances INT = 0,
       @ERROR_COUNT INT = 0
-      EXEC @ERROR_COUNT = sp_GetStockSatistics @NoInstances OUT, @NoExpiredInstances OUT, @NoOOSInstances OUT
+      EXEC @ERROR_COUNT = sp_GetStockStatistics @NoInstances OUT, @NoExpiredInstances OUT, @NoOOSInstances OUT
       SELECT @NoInstances AS NoInstances, @NoExpiredInstances AS NoExpiredInstances, @NoOOSInstances AS NoOOSInstances, @ERROR_COUNT AS ERROR_COUNT
     `);
 
@@ -181,186 +173,27 @@ export default class StoreProcController {
     });
   }
 
-  static async test(request: Request, response: Response, next: NextFunction) {
-    const result = await AppDataSource.query(`
-    EXECUTE sp_DocKhachHang`);
-    response.status(200).json({
-      data: result,
-    });
-  }
+  static async Execute_SQL(filename: string, isFix: boolean) {
+    if (isFix) {
+      filename += "_FIX";
+    }
 
-  static async DirtyRead_NoFix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
     const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/DirtyRead/CapNhatLich.sql"),
+      path.join(__dirname, `../sql/PhantomRead/${filename}.sql`),
       "utf8"
     );
 
-    // Execute SQL
-    // Split sql by GO
     const sqls = sql.split("GO");
 
-    // Execute SQL
     await AppDataSource.query(sqls[0]);
     await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
   }
 
-  static async DirtyRead_Fix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/DirtyRead/CapNhatLich_fix.sql"),
-      "utf8"
-    );
-
-    // Execute SQL
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
+  static async Errors_NoFix() {
+    await StoreProcController.Execute_SQL("4_PhantomRead", false);
   }
 
-  static async Conversion_NoFix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/Conversion/Conversion-deadlock.sql"),
-      "utf8"
-    );
-
-    // Execute SQL
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
-  }
-
-  static async Conversion_Fix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/Conversion/Conversion-deadlock_fix.sql"),
-      "utf8"
-    );
-
-    // Execute SQL
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
-  }
-
-  static async LostUpdate_NoFix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/LostUpdate/7_LostUpdate.sql"),
-      "utf8"
-    );
-
-    // Execute SQL
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
-  }
-
-  static async LostUpdate_Fix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/LostUpdate/7_LostUpdate_FIX.sql"),
-      "utf8"
-    );
-
-    // Execute SQL
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
-  }
-
-  static async PhantomRead_NoFix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/PhantomRead/4_PhantomRead.sql"),
-      "utf8"
-    );
-
-    // Execute SQL
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
-  }
-
-  static async PhantomRead_Fix(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ) {
-    // Read .SQL file
-    const sql = fs.readFileSync(
-      path.join(__dirname, "../sql/PhantomRead/4_PhantomRead_FIX.sql"),
-      "utf8"
-    );
-
-    // Split sql by GO
-    const sqls = sql.split("GO");
-
-    // Execute SQL
-    await AppDataSource.query(sqls[0]);
-    await AppDataSource.query(sqls[1]);
-
-    response.status(200).json({});
+  static async Errors_Fix() {
+    await StoreProcController.Execute_SQL("4_PhantomRead", true);
   }
 }
