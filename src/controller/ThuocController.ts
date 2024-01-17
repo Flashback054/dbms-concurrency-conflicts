@@ -91,3 +91,50 @@ export async function destroy(req: Request, res: Response, next: NextFunction) {
 
   res.redirect("/thuoc");
 }
+
+export async function editSoLuongTon(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+    where: { MaThuoc: +req.params.id },
+  });
+
+  res.render("pages/nhap-so-luong-thuoc", {
+    heading: "Nhập số lượng thuốc vô kho",
+    medicine,
+  });
+}
+
+export async function sellThuoc(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { SLMua, MaThuoc } = req.body;
+
+  const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+    where: { MaThuoc },
+  });
+  const SoLuongTon = medicine.SoLuongTon;
+
+  try {
+    const newSoLuongTon = Number(SoLuongTon) - Number(SLMua);
+
+    if (newSoLuongTon < 0) {
+      throw new Error("Số lượng thuốc trong kho không đủ!");
+    }
+
+    await AppDataSource.query(`
+      EXECUTE sp_CapNhatSoLuongTonThuoc '${MaThuoc}', ${newSoLuongTon}
+    `);
+
+    res.redirect("/thuoc/ban-thuoc");
+  } catch (error) {
+    res.render("pages/ban-thuoc", {
+      heading: "Bán thuốc",
+      error: error.message.toString().replace("Error: ", ""),
+    });
+  }
+}

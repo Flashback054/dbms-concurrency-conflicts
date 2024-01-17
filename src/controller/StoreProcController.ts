@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { NextFunction, Request, Response } from "express";
-import { KhachHang } from "../entity";
+import { KhachHang, Thuoc } from "../entity";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -106,13 +106,12 @@ export default class StoreProcController {
 	) {
 		const { MaThuoc, SoThuoc } = request.body;
 		console.log(MaThuoc, SoThuoc);
-		try{
+		try {
 			const result = await AppDataSource.query(`
       		EXECUTE sp_UpdateSoluongtonThuoc_Before ${MaThuoc}, ${SoThuoc}
     		`);
 			response.redirect("/thuoc");
-		}
-		catch(error){
+		} catch (error) {
 			response.render("pages/lap-hoa-don", {
 				layout: "main-boostrap",
 				error: error.message.toString().replace("Error: ", ""),
@@ -145,8 +144,8 @@ export default class StoreProcController {
 
 		try {
 			await AppDataSource.query(`
-        EXECUTE sp_InsertThuocInstance '${TenThuoc}', '${DonViTinh}', ${DonGia}, '${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
-      `);
+          EXECUTE sp_InsertThuocInstance N'${TenThuoc}', N'${DonViTinh}', ${DonGia}, N'${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
+        `);
 
 			response.redirect("/thuoc");
 		} catch (error) {
@@ -180,42 +179,68 @@ export default class StoreProcController {
 	}
 
 	static async UnrepeatableRead_sp_DocThongTinThuoc(
-		request: Request,
-		response: Response,
+		req: Request,
+		res: Response,
 		next: NextFunction
 	) {
-		const { MaThuoc, SLMua } = request.body;
+		const { MaThuoc, SLMua } = req.query;
 
 		try {
-			await AppDataSource.query(`
-        EXECUTE sp_DocThongTinThuoc ${MaThuoc}, ${SLMua}
-      `);
+			const result =
+				MaThuoc && SLMua
+					? await AppDataSource.query(`
+          DECLARE @ERROR_COUNT INT = 0
+          EXEC @ERROR_COUNT = sp_DocThongTinThuoc ${MaThuoc}, ${SLMua}
 
-			response.redirect("/thuoc");
+          IF @ERROR_COUNT = 0
+            SELECT * FROM Thuoc WHERE MaThuoc = ${MaThuoc}
+        `)
+					: null;
+
+			const medicine = result?.at(0);
+			res.render("pages/ban-thuoc", {
+				heading: "Bán thuốc",
+				medicine,
+				MaThuoc,
+				SLMua,
+				SLConLai: medicine?.SoLuongTon - +SLMua,
+				TongTien: medicine?.DonGia * +SLMua,
+			});
 		} catch (error) {
-			response.render("pages/them-thong-tin-thuoc", {
-				heading: "Thêm thông tin thuốc",
+			res.render("pages/ban-thuoc", {
+				heading: "Bán thuốc",
 				error: error.message.toString().replace("Error: ", ""),
 			});
 		}
 	}
 
 	static async UnrepeatableRead_sp_CapNhatSoLuongTonThuoc(
-		request: Request,
-		response: Response,
+		req: Request,
+		res: Response,
 		next: NextFunction
 	) {
-		const { MaThuoc, SoLuongTon } = request.body;
+		const { SoLuongTon, SoLuongNhap } = req.body;
+		const MaThuoc = +req.params.id;
 
-		const result = await AppDataSource.query(
-			`EXEC sp_CapNhatSoLuongTonThuoc ${MaThuoc}, ${SoLuongTon}`
-		);
+		try {
+			await AppDataSource.query(`
+        EXECUTE sp_CapNhatSoLuongTonThuoc '${MaThuoc}', ${
+				Number(SoLuongNhap) + Number(SoLuongTon)
+			}
+      `);
 
-		response.render("pages/thong-ke-thuoc", {
-			heading: "Thống kê số lượng thuốc",
-			data: result.at(0),
-			error: result.at(0).ERROR_COUNT > 0,
-		});
+			res.redirect("/thuoc");
+		} catch (error) {
+			const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+				where: { MaThuoc },
+			});
+
+			res.render("pages/nhap-so-luong-thuoc", {
+				heading: "Nhập số lượng thuốc vô kho",
+				medicine,
+				error: error.message.toString().replace("Error: ", ""),
+			});
+		}
 	}
 
 	static async Execute_SQL(filename: string, isFix: boolean) {
@@ -240,7 +265,10 @@ export default class StoreProcController {
 			"Conversion/5_ConversionDeadlock",
 			false
 		);
-		// await StoreProcController.Execute_SQL("LostUpdate/7_LostUpdate", false);
+		await StoreProcController.Execute_SQL(
+			"UnrepeatableRead/3_UnrepeatableRead",
+			false
+		);
 	}
 
 	static async Errors_Fix() {
@@ -249,7 +277,9 @@ export default class StoreProcController {
 			"Conversion/5_ConversionDeadlock",
 			true
 		);
-		// await StoreProcController.Execute_SQL("LostUpdate/7_LostUpdate", true);
-
+		await StoreProcController.Execute_SQL(
+			"UnrepeatableRead/3_UnrepeatableRead",
+			true
+		);
 	}
 }

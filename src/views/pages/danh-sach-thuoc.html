@@ -1,57 +1,78 @@
 <h2
-  class="text-center font-medium mb-4 bg-green-200 w-fit mx-auto py-1 px-3 rounded-md"
+  class="px-3 py-1 mx-auto mb-4 font-medium text-center bg-green-200 rounded-md w-fit"
 >
   <span class="text-green-600">{{noInstances}}</span>
   Thông tin thuốc trong kho
 </h2>
-<ul class="flex gap-3 flex-col text-lg mb-6 max-w-[400px] mx-auto">
+<ul class="flex gap-3 flex-col text-lg mb-6 max-w-[460px] mx-auto">
   {{#each medicines as |medicine|}}
-    <li
-      class="py-2 px-4 border-2 border-gray-200 rounded-md shadow-sm flex gap-8 justify-between items-center hover:bg-gray-50 transition-colors"
-    >
-      <div>
-        <span>#{{medicine.MaThuoc}}</span>
-        <span class="font-bold"> · </span>
-        <span class="font-medium">{{medicine.TenThuoc}}</span>
-        <span class="font-bold"> · </span>
-        <span class="font-medium">{{medicine.SoLuongTon}}
-          {{medicine.DonViTinh}}</span>
-      </div>
-      <div class="flex gap-2">
-        <a href="/thuoc/cap-nhat-thuoc/{{medicine.MaThuoc}}">
-          <i class="fa-regular fa-pen-to-square"></i>
-        </a>
-        <a href="/thuoc/{{medicine.MaThuoc}}">
-          <i class="fa-regular fa-eye"></i>
-        </a>
-        <form
-          action="/thuoc/{{medicine.MaThuoc}}?_method=DELETE"
-          class="mb-0"
-          method="POST"
-        >
-          <button>
-            <i class="fa-solid fa-trash text-red-600"></i>
-          </button>
-        </form>
-      </div>
-    </li>
+  <li
+    class="flex items-center justify-between gap-8 px-4 py-2 transition-colors border-2 border-gray-200 rounded-md shadow-sm hover:bg-gray-50"
+  >
+    <div>
+      <span>#{{medicine.MaThuoc}}</span>
+      <span class="font-bold"> · </span>
+      <span class="font-medium">{{medicine.TenThuoc}}</span>
+      <span class="font-bold"> · </span>
+      <span class="font-medium"
+        >{{medicine.SoLuongTon}} {{medicine.DonViTinh}}</span
+      >
+    </div>
+    <div class="flex items-center gap-2">
+      <a
+        href="/thuoc/nhap-so-luong-thuoc/{{medicine.MaThuoc}}"
+        aria-label="Nhập số lượng thuốc"
+      >
+        <i class="fa-solid fa-square-plus" role="presentation"></i>
+      </a>
+      <a
+        href="/thuoc/cap-nhat-thuoc/{{medicine.MaThuoc}}"
+        aria-label="Cập nhật thông tin thuốc"
+      >
+        <i class="fa-regular fa-pen-to-square" role="presentation"></i>
+      </a>
+      <a
+        href="/thuoc/{{medicine.MaThuoc}}"
+        aria-label="Xem chi tiết thông tin thuốc"
+      >
+        <i class="fa-regular fa-eye"></i>
+      </a>
+      <form
+        action="/thuoc/{{medicine.MaThuoc}}?_method=DELETE"
+        class="mb-0"
+        method="POST"
+      >
+        <button aria-label="Xóa thông tin thuốc">
+          <i class="text-red-600 fa-solid fa-trash" role="presentation"></i>
+        </button>
+      </form>
+    </div>
+  </li>
   {{/each}}
 </ul>
 
-<div class="flex items-center gap-4 justify-center">
+<div class="flex items-center justify-center gap-4">
   <a
     href="/thuoc/them-thong-tin-thuoc"
-    class="flex px-2 py-1 rounded-md bg-green-100 items-center gap-1"
+    class="flex items-center gap-1 px-2 py-1 bg-green-100 rounded-md"
   >
-    <i class="fa-solid fa-square-plus"></i>
+    <i class="fa-solid fa-square-plus" role="presentation"></i>
     Thêm thuốc
   </a>
 
   <a
-    href="/thuoc/thong-ke-thuoc"
-    class="flex px-2 py-1 rounded-md bg-violet-100 items-center gap-1"
+    href="/thuoc/ban-thuoc"
+    class="flex items-center gap-1 px-2 py-1 rounded-md bg-zinc-100"
   >
-    <i class="fa-solid fa-chart-simple"></i>
+    <i class="fa-solid fa-cart-shopping" role="presentation"></i>
+    Bán thuốc
+  </a>
+
+  <a
+    href="/thuoc/thong-ke-thuoc"
+    class="flex items-center gap-1 px-2 py-1 rounded-md bg-violet-100"
+  >
+    <i class="fa-solid fa-chart-simple" role="presentation"></i>
     Thống kê số lượng
   </a>
 </div>

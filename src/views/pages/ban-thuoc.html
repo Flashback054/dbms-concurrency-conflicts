@@ -1,0 +1,79 @@
+<form action="/thuoc/ban-thuoc" class="max-w-sm mx-auto mb-6 space-y-3">
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="thuocId">Mã thuốc</label>
+    <input
+      type="text"
+      name="MaThuoc"
+      id="thuocId"
+      required
+      value="{{MaThuoc}}"
+    />
+  </div>
+  <div class="flex flex-col gap-1">
+    <label class="font-medium" for="buyQuantity">Số lượng mua</label>
+    <input
+      type="number"
+      name="SLMua"
+      id="buyQuantity"
+      value="{{SLMua}}"
+      required
+      min="0"
+    />
+  </div>
+
+  <div class="flex justify-end gap-2 pt-3">
+    <a
+      href="/thuoc/ban-thuoc"
+      class="px-3 py-1 rounded-md bg-zinc-500 text-gray-50"
+      >Làm mới</a
+    >
+    <button class="px-4 py-1 bg-blue-500 rounded-md text-gray-50" type="submit">
+      Tra cứu
+    </button>
+  </div>
+</form>
+
+<!--  -->
+
+{{> messages}}
+
+<!--  -->
+
+{{#with medicine}}
+<section class="text-center">
+  <h2 class="mb-2 text-xl font-medium">Thông tin tra cứu</h2>
+
+  <div class="p-4 mx-auto mb-2 border-2 rounded-md w-fit">
+    <span>#{{MaThuoc}}</span>
+    <span class="font-bold"> · </span>
+    <span class="font-medium">{{TenThuoc}}</span>
+    <span class="font-bold"> · </span>
+    <span class="font-medium">{{SoLuongTon}} {{DonViTinh}}</span>
+    <span class="font-bold"> · </span>
+    <span class="font-medium">{{currencyFormat DonGia}}</span>
+  </div>
+
+  <form
+    class="flex flex-col items-center justify-center gap-3"
+    method="post"
+    action="/thuoc/ban-thuoc/{{MaThuoc}}"
+  >
+    <div>
+      <span>Tổng tiền: </span>
+      {{currencyFormat ../TongTien}}
+    </div>
+    <div>
+      <span>Số lượng còn lại: </span>
+      {{../SLConLai}} {{DonViTinh}}
+    </div>
+    <input type="hidden" name="SLMua" value="{{../SLMua}}" />
+    <input type="hidden" name="SoLuongTon" value="{{SoLuongTon}}" />
+    <input type="hidden" name="MaThuoc" value="{{MaThuoc}}" />
+    <button class="px-4 py-1 bg-blue-500 rounded-md text-gray-50" type="submit">
+      Bán
+    </button>
+  </form>
+</section>
+{{/with}}
+
+<!--  -->
