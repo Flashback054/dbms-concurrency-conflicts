@@ -15,7 +15,6 @@ router.get("/", (req, res) => {
   type ConflictPair = {
     label: string;
     type: string;
-    color: string;
     item1?: ConflictPairItem;
     item2?: ConflictPairItem;
   };
@@ -29,7 +28,6 @@ router.get("/", (req, res) => {
     {
       label: "21120499 - Nguyễn Duy Long",
       type: "Dirty Read",
-      color: "blue",
       item1: {
         label: "Tình huống 1: ",
         url: "/tai-khoan/cap-nhat-mat-khau",
@@ -42,7 +40,6 @@ router.get("/", (req, res) => {
     {
       label: "21120500 - Mai Văn Minh",
       type: "Conversion deadlock",
-      color: "orange",
       item1: {
         label: "Cập nhật mật khẩu",
         url: "/khach-hang",
@@ -55,7 +52,6 @@ router.get("/", (req, res) => {
     {
       label: "21120502 - Trần Đức Minh",
       type: "Unrepeatable read",
-      color: "purple",
       item1: {
         label: "Tình huống 1: ",
         url: "/tai-khoan/cap-nhat-mat-khau",
@@ -68,7 +64,6 @@ router.get("/", (req, res) => {
     {
       label: "21120521 - Nguyễn Phúc Phát",
       type: "Lost update",
-      color: "yellow",
       item1: {
         label: "Lập hóa đơn ",
         url: "/lap-hoa-don",
@@ -81,7 +76,6 @@ router.get("/", (req, res) => {
     {
       label: "21120524 - Trương Minh Phát",
       type: "Phantom Read",
-      color: "green",
       item1: {
         label: "Thống kê số lượng thuốc: ",
         url: "/thuoc/thong-ke-thuoc",
@@ -93,6 +87,12 @@ router.get("/", (req, res) => {
     },
   ];
 
+  if (currentMode == "conflict") {
+    // run the sql script to resolve the conflicts
+  } else {
+    // run the sql script to create the conflicts
+  }
+
   res.render("pages/trang-chu", {
     heading: "Danh sách các tình huống tranh chấp",
     isBackHidden: true,
@@ -103,13 +103,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/toggle-mode", (req, res) => {
-  if (currentMode == "conflict") {
-    currentMode = "resolved";
-    // run the sql script to resolve the conflicts
-  } else {
-    currentMode = "conflict";
-    // run the sql script to create the conflicts
-  }
+  currentMode = currentMode == "conflict" ? "resolved" : "conflict";
 
   res.redirect("/");
 });
