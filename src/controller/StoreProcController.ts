@@ -62,7 +62,7 @@ export default class StoreProcController {
 
       response.render("pages/danh-sach-khach-hang", {
         heading: "Danh sách khách hàng",
-        error: "Deadlock! Khóa tài khoản thất bại!",
+        error: error.message,
         customers,
       });
     }
@@ -90,7 +90,7 @@ export default class StoreProcController {
     } catch (error) {
       response.render("pages/cap-nhat-mat-khau", {
         heading: "Đổi mật khẩu",
-        error: "Deadlock! Cập nhật tài khoản thất bại!",
+        error: error.message.toString().replace("Error: ", ""),
         customer: {
           MaKhachHang,
           MatKhau,
@@ -179,7 +179,7 @@ export default class StoreProcController {
     }
 
     const sql = fs.readFileSync(
-      path.join(__dirname, `../sql/PhantomRead/${filename}.sql`),
+      path.join(__dirname, `../sql/${filename}.sql`),
       "utf8"
     );
 
@@ -190,10 +190,18 @@ export default class StoreProcController {
   }
 
   static async Errors_NoFix() {
-    await StoreProcController.Execute_SQL("4_PhantomRead", false);
+    await StoreProcController.Execute_SQL("PhantomRead/4_PhantomRead", false);
+    await StoreProcController.Execute_SQL(
+      "Conversion/5_ConversionDeadlock",
+      false
+    );
   }
 
   static async Errors_Fix() {
-    await StoreProcController.Execute_SQL("4_PhantomRead", true);
+    await StoreProcController.Execute_SQL("PhantomRead/4_PhantomRead", true);
+    await StoreProcController.Execute_SQL(
+      "Conversion/5_ConversionDeadlock",
+      true
+    );
   }
 }
