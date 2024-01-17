@@ -54,12 +54,12 @@ router.get("/", async (req, res) => {
       label: "21120502 - Trần Đức Minh",
       type: "Unrepeatable read",
       item1: {
-        label: "Nhập số lượng thuốc trong kho ",
-        url: "/thuoc",
+        label: "Cập nhập số lượng thuốc trong kho (bán thuốc)",
+        url: "/thuoc/ban-thuoc",
       },
       item2: {
-        label: "Tình huống 2: ",
-        url: "/tai-khoan",
+        label: "Bán lẻ thuốc cho khách",
+        url: "/thuoc/ban-thuoc",
       },
     },
     {

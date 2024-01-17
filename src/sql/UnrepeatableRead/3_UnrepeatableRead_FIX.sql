@@ -31,7 +31,7 @@ BEGIN
 
 			WAITFOR DELAY '0:0:3'
 
-			SELECT * FROM Thuoc WHERE Thuoc.MaThuoc = @MaThuoc AND Thuoc.SoLuongTon > @SLMua
+			SELECT * FROM Thuoc WHERE Thuoc.MaThuoc = @MaThuoc AND Thuoc.SoLuongTon >= @SLMua
 			IF (@@ROWCOUNT = 0)
 			BEGIN
 				SET @ERROR_MESSAGE = N'Thuốc với MaThuoc ' + CAST(@MaThuoc AS VARCHAR(10)) + N' không đủ số lượng tồn'
@@ -41,9 +41,8 @@ BEGIN
 		END TRY
 		BEGIN CATCH
 			SET @ERROR_MESSAGE = ERROR_MESSAGE()
-			PRINT @ERROR_MESSAGE
 			RAISERROR(@ERROR_MESSAGE, 16, 1)
-			RETURN
+			RETURN 1
 		END CATCH
 	COMMIT TRAN
 END

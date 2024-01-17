@@ -107,28 +107,33 @@ export async function editSoLuongTon(
   });
 }
 
-export async function updateSoLuongTon(
+export async function sellThuoc(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const { SoLuongTon, SoLuongNhap } = req.body;
+  const { SLMua, MaThuoc } = req.body;
+
+  const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+    where: { MaThuoc },
+  });
+  const SoLuongTon = medicine.SoLuongTon;
 
   try {
-    await AppDataSource.getRepository(Thuoc).update(
-      { MaThuoc: +req.params.id },
-      { SoLuongTon: Number(SoLuongTon) + Number(SoLuongNhap) }
-    );
+    const newSoLuongTon = Number(SoLuongTon) - Number(SLMua);
 
-    res.redirect("/thuoc");
+    if (newSoLuongTon < 0) {
+      throw new Error("Số lượng thuốc trong kho không đủ!");
+    }
+
+    await AppDataSource.query(`
+      EXECUTE sp_CapNhatSoLuongTonThuoc '${MaThuoc}', ${newSoLuongTon}
+    `);
+
+    res.redirect("/thuoc/ban-thuoc");
   } catch (error) {
-    const medicine = await AppDataSource.getRepository(Thuoc).findOne({
-      where: { MaThuoc: +req.params.id },
-    });
-
-    res.render("pages/nhap-so-luong-thuoc", {
-      heading: "Nhập số lượng thuốc vô kho",
-      medicine,
+    res.render("pages/ban-thuoc", {
+      heading: "Bán thuốc",
       error: error.message.toString().replace("Error: ", ""),
     });
   }

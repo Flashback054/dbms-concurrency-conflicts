@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { NextFunction, Request, Response } from "express";
-import { KhachHang } from "../entity";
+import { KhachHang, Thuoc } from "../entity";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -139,8 +139,8 @@ export default class StoreProcController {
 
     try {
       await AppDataSource.query(`
-        EXECUTE sp_InsertThuocInstance N'${TenThuoc}', N'${DonViTinh}', ${DonGia}, N'${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
-      `);
+          EXECUTE sp_InsertThuocInstance N'${TenThuoc}', N'${DonViTinh}', ${DonGia}, N'${ChiDinh}', ${SoLuongTon}, '${NgayHetHan}'
+        `);
 
       response.redirect("/thuoc");
     } catch (error) {
@@ -171,6 +171,71 @@ export default class StoreProcController {
       data: result.at(0),
       error: result.at(0).ERROR_COUNT > 0,
     });
+  }
+
+  static async UnrepeatableRead_sp_DocThongTinThuoc(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { MaThuoc, SLMua } = req.query;
+
+    try {
+      const result =
+        MaThuoc && SLMua
+          ? await AppDataSource.query(`
+          DECLARE @ERROR_COUNT INT = 0
+          EXEC @ERROR_COUNT = sp_DocThongTinThuoc ${MaThuoc}, ${SLMua}
+
+          IF @ERROR_COUNT = 0
+            SELECT * FROM Thuoc WHERE MaThuoc = ${MaThuoc}
+        `)
+          : null;
+
+      const medicine = result?.at(0);
+      res.render("pages/ban-thuoc", {
+        heading: "Bán thuốc",
+        medicine,
+        MaThuoc,
+        SLMua,
+        SLConLai: medicine?.SoLuongTon - +SLMua,
+        TongTien: medicine?.DonGia * +SLMua,
+      });
+    } catch (error) {
+      res.render("pages/ban-thuoc", {
+        heading: "Bán thuốc",
+        error: error.message.toString().replace("Error: ", ""),
+      });
+    }
+  }
+
+  static async UnrepeatableRead_sp_CapNhatSoLuongTonThuoc(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { SoLuongTon, SoLuongNhap } = req.body;
+    const MaThuoc = +req.params.id;
+
+    try {
+      await AppDataSource.query(`
+        EXECUTE sp_CapNhatSoLuongTonThuoc '${MaThuoc}', ${
+        Number(SoLuongNhap) + Number(SoLuongTon)
+      }
+      `);
+
+      res.redirect("/thuoc");
+    } catch (error) {
+      const medicine = await AppDataSource.getRepository(Thuoc).findOne({
+        where: { MaThuoc },
+      });
+
+      res.render("pages/nhap-so-luong-thuoc", {
+        heading: "Nhập số lượng thuốc vô kho",
+        medicine,
+        error: error.message.toString().replace("Error: ", ""),
+      });
+    }
   }
 
   static async Execute_SQL(filename: string, isFix: boolean) {
