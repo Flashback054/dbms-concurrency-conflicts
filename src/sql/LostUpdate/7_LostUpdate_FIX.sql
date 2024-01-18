@@ -1,4 +1,4 @@
-﻿CREATE OR ALTER
+CREATE OR ALTER
 PROC sp_UpdateSoluongtonThuoc_Before
     @MaThuoc INT,
     @SoThuoc INT
@@ -40,8 +40,8 @@ BEGIN TRANSACTION
         END CATCH
 COMMIT TRANSACTION;
 RETURN 1;
-
 GO
+
 CREATE OR ALTER
 PROC sp_UpdateSoluongtonThuoc_After
     @MaThuoc INT,
